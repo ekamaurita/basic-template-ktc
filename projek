@@ -13,7 +13,8 @@ tampilkanMenu() {
     echo "3. Edit Data Mahasiswa"
     echo "4. Hapus Data Mahasiswa"
     echo "5. Cari Mahasiswa"
-    echo "6. Keluar"
+    echo "6. Materi Mahasiswa"
+    echo "7. Keluar"
     echo -e "Pilih menu: "
 }
 
@@ -99,11 +100,48 @@ cariDataMahasiswa() {
         fi
     done
 }
+materiMahasiswa() {
+    clear
+    echo "Materi Mahasiswa:"
+    echo "1. Membuat Folder Baru"
+    echo "2. Manipulasi Hak Akses"
+    echo "3. Menghitung Luas Persegi"
+    echo "4. Kembali ke Menu Utama"
+    echo -e "Pilih materi: "
+    read -p "Masukkan pilihan (1-4): " pilihanMateri
+
+    case $pilihanMateri in
+        1) membuatFolderBaru ;;
+        2) manipulasiHakAkses ;;
+        3) menghitungLuasPersegi ;;
+        4) echo "Kembali ke Menu Utama." ;;
+        *) echo "Pilihan tidak valid. Kembali ke Menu Utama." ;;
+    esac
+}
+
+membuatFolderBaru() {
+    read -p "Masukkan nama folder baru: " namaFolder
+    mkdir "$namaFolder"
+    echo "Folder '$namaFolder' berhasil dibuat."
+}
+
+manipulasiHakAkses() {
+    read -p "Masukkan nama file atau folder: " target
+    read -p "Masukkan hak akses baru (misalnya 755): " permissions
+    chmod "$permissions" "$target"
+    echo "Hak akses untuk '$target' telah diubah menjadi $permissions."
+}
+
+menghitungLuasPersegi() {
+    read -p "Masukkan panjang sisi persegi: " panjangSisi
+    luas=$((panjangSisi * panjangSisi))
+    echo "Luas persegi dengan panjang sisi $panjangSisi adalah $luas."
+}
 
 # Program utama
 while true; do
     tampilkanMenu
-    read -p "Masukkan pilihan (1-6): " pilihan
+    read -p "Masukkan pilihan (1-7): " pilihan
 
     case $pilihan in
         1) tambahMahasiswa ;;
@@ -111,7 +149,9 @@ while true; do
         3) editDataMahasiswa ;;
         4) hapusDataMahasiswa ;;
         5) cariDataMahasiswa ;;
-        6) echo "Keluar dari program." ; exit 0 ;;
+        6) materiMahasiswa ;;
+        7) echo "Keluar dari program." ; exit 0 ;;
         *) echo "Pilihan tidak valid. Silakan coba lagi." ;;
     esac
 done
+
