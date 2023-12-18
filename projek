@@ -100,21 +100,24 @@ cariDataMahasiswa() {
         fi
     done
 }
+
 materiMahasiswa() {
     clear
     echo "Materi Mahasiswa:"
     echo "1. Membuat Folder Baru"
     echo "2. Manipulasi Hak Akses"
     echo "3. Menghitung Luas Persegi"
-    echo "4. Kembali ke Menu Utama"
+    echo "4. Menghitung IPK"
+    echo "5. Kembali ke Menu Utama"
     echo -e "Pilih materi: "
-    read -p "Masukkan pilihan (1-4): " pilihanMateri
+    read -p "Masukkan pilihan (1-5): " pilihanMateri
 
     case $pilihanMateri in
         1) membuatFolderBaru ;;
         2) manipulasiHakAkses ;;
         3) menghitungLuasPersegi ;;
-        4) echo "Kembali ke Menu Utama." ;;
+        4) perhitunganIPK ;;
+        5) echo "Kembali ke Menu Utama." ;;
         *) echo "Pilihan tidak valid. Kembali ke Menu Utama." ;;
     esac
 }
@@ -126,16 +129,65 @@ membuatFolderBaru() {
 }
 
 manipulasiHakAkses() {
-    read -p "Masukkan nama file atau folder: " target
-    read -p "Masukkan hak akses baru (misalnya 755): " permissions
-    chmod "$permissions" "$target"
-    echo "Hak akses untuk '$target' telah diubah menjadi $permissions."
+    echo "Submenu Manipulasi Hak Akses"
+    echo "a) Tampilkan Hak Akses"
+    echo "b) Ubah Hak Akses"
+    echo "c) Kembali"
+    read -p "Masukkan pilihan submenu (a-c): " sub_option
+
+    case $sub_option in
+        a) tampilkanHakAkses ;;
+        b) ubahHakAkses ;;
+        c) echo "Kembali ke Menu Utama." ;;
+        *) echo "Pilihan tidak valid." ;;
+    esac
+}
+
+tampilkanHakAkses() {
+    read -p "Masukkan nama file atau direktori: " file_or_directory
+
+    if [ -e "$file_or_directory" ]; then
+        ls -l "$file_or_directory"
+    else
+        echo "File atau direktori tidak ditemukan."
+    fi
+}
+
+ubahHakAkses() {
+    read -p "Masukkan nama file atau direktori: " file_or_directory
+    read -p "Masukkan hak akses baru (misal: 755): " new_permissions
+
+    if [ -e "$file_or_directory" ]; then
+        chmod "$new_permissions" "$file_or_directory"
+        echo "Hak akses telah diubah."
+    else
+        echo "File atau direktori tidak ditemukan."
+    fi
 }
 
 menghitungLuasPersegi() {
     read -p "Masukkan panjang sisi persegi: " panjangSisi
     luas=$((panjangSisi * panjangSisi))
     echo "Luas persegi dengan panjang sisi $panjangSisi adalah $luas."
+}
+
+perhitunganIPK() {
+    echo -n "Masukkan Jumlah Semester:"
+    read jumlahSemester
+
+    for ((i=0; i<$jumlahSemester; i++)); do
+        echo -n "Masukkan IPS semester ke-$((i+1)):"
+        read arrayIPSMahasiswa[$i]
+    done
+    
+    jumlahIPS=0
+    for IPS in "${arrayIPSMahasiswa[@]}"; do
+        jumlahIPS=$(echo "$jumlahIPS + $IPS" | bc)
+    done
+
+    IPK=$(echo "scale=2; $jumlahIPS / $jumlahSemester" | bc)
+
+    echo "Nilai IPK mahasiswa:$IPK"
 }
 
 # Program utama
@@ -154,4 +206,3 @@ while true; do
         *) echo "Pilihan tidak valid. Silakan coba lagi." ;;
     esac
 done
-
